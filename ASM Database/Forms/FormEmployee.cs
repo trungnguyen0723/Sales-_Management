@@ -61,7 +61,6 @@ namespace ASM_Database.Forms
                 tbPassword.Focus(); return false;
             }
 
-            // ✅ Validate số điện thoại
             if (string.IsNullOrEmpty(phone))
             {
                 MessageBox.Show("Phone Number cannot be blank", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -74,7 +73,6 @@ namespace ASM_Database.Forms
                 tbPhone.Focus(); return false;
             }
 
-            // ✅ Validate email
             if (string.IsNullOrEmpty(email))
             {
                 MessageBox.Show("Email cannot be blank", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -95,7 +93,6 @@ namespace ASM_Database.Forms
             {
                 if (connection == null) return;
                 connection.Open();
-                // ✅ Chỉ load nhân viên đang active
                 string sql = "SELECT Employee_ID, Employee_Name, Position, Authority, Username, Pass_word, Phone_Number, Email FROM EMPLOYEE WHERE IsActive = 1";
                 SqlDataAdapter adapter = new SqlDataAdapter(sql, connection);
                 DataTable table = new DataTable();
@@ -165,7 +162,6 @@ namespace ASM_Database.Forms
                 if (connection == null) return;
                 connection.Open();
 
-                // ✅ Kiểm tra username trùng với employee khác
                 string checkSql = "SELECT COUNT(*) FROM EMPLOYEE WHERE Username = @Username AND Employee_ID != @Id";
                 using (SqlCommand checkCmd = new SqlCommand(checkSql, connection))
                 {
@@ -292,7 +288,6 @@ namespace ASM_Database.Forms
                 if (connection == null) return;
                 connection.Open();
 
-                // ✅ Chỉ đánh dấu IsActive = 0, không xóa thật
                 string sql = "UPDATE EMPLOYEE SET IsActive = 0 WHERE Employee_ID = @Id";
                 using (SqlCommand command = new SqlCommand(sql, connection))
                 {

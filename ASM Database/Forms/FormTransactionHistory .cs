@@ -39,7 +39,6 @@ namespace ASM_Database.Forms
 
                     if (!string.IsNullOrWhiteSpace(keyword))
                     {
-                        // Chỉ tìm theo tên khách hoặc mã khách
                         sql += "AND (c.Customer_Name LIKE @keyword";
                         if (int.TryParse(keyword, out int customerId))
                         {
@@ -129,10 +128,10 @@ namespace ASM_Database.Forms
 
         private void ExportToExcel(string filePath)
         {
-            // Tạo nội dung CSV
+            
             System.Text.StringBuilder sb = new System.Text.StringBuilder();
 
-            // Thêm header
+            
             string[] headers = new string[dtgTransaction.Columns.Count];
             for (int i = 0; i < dtgTransaction.Columns.Count; i++)
             {
@@ -140,7 +139,7 @@ namespace ASM_Database.Forms
             }
             sb.AppendLine(string.Join(",", headers));
 
-            // Thêm dữ liệu
+            
             foreach (DataGridViewRow row in dtgTransaction.Rows)
             {
                 if (row.IsNewRow) continue;
@@ -149,7 +148,7 @@ namespace ASM_Database.Forms
                 {
                     object cellValue = row.Cells[i].Value;
                     string field = cellValue?.ToString() ?? "";
-                    // Nếu trong field có dấu phẩy, đặt trong dấu ngoặc kép
+                   
                     if (field.Contains(",") || field.Contains("\""))
                     {
                         field = "\"" + field.Replace("\"", "\"\"") + "\"";
@@ -159,7 +158,6 @@ namespace ASM_Database.Forms
                 sb.AppendLine(string.Join(",", fields));
             }
 
-            // Ghi ra file
             File.WriteAllText(filePath, sb.ToString(), System.Text.Encoding.UTF8);
         }
 
@@ -167,17 +165,15 @@ namespace ASM_Database.Forms
         {
             int index = e.RowIndex;
             if (index < 0) return;
-
-            
             int orderId = Convert.ToInt32(dtgTransaction.Rows[index].Cells[0].Value);
 
-            // Lấy chi tiết đơn hàng
+            
             using (SqlConnection connection = DatabaseConnection.GetConnection())
             {
                 if (connection == null) return;
                 connection.Open();
 
-                // Lấy thông tin đơn hàng
+               
                 string orderSql = @"SELECT s.Sales_Order_ID, s.Sales_Date, s.Total_Amount, s.Notes,
                             c.Customer_ID, c.Customer_Name
                             FROM SALE_ORDER s
@@ -206,7 +202,6 @@ namespace ASM_Database.Forms
                     }
                 }
 
-                // Lấy chi tiết sản phẩm trong đơn
                 string detailSql = @"SELECT p.Product_Name, sd.Sales_Quantity, sd.Unit_Price, sd.Subtotal
                              FROM SALES_DETAIL sd
                              JOIN PRO_DUCT p ON sd.Product_ID = p.Product_ID

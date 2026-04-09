@@ -45,7 +45,6 @@ namespace ASM_Database
             double red = color.R;
             double green = color.G;
             double blue = color.B;
-            //If correction factor is less than 0, darken color.
             if (correctionFactor < 0)
             {
                 correctionFactor = 1 + correctionFactor;
@@ -53,7 +52,7 @@ namespace ASM_Database
                 green *= correctionFactor;
                 blue *= correctionFactor;
             }
-            //If correction factor is greater than zero, lighten color.
+           
             else
             {
                 red = (255 - red) * correctionFactor + red;

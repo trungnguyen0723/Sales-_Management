@@ -170,7 +170,6 @@ namespace ASM_Database.Forms
                 return;
             }
 
-            // Kiểm tra category có đang được dùng trong PRO_DUCT không
             using (SqlConnection connection = DatabaseConnection.GetConnection())
             {
                 if (connection == null) return;
@@ -231,7 +230,6 @@ namespace ASM_Database.Forms
                 if (connection == null) return;
                 connection.Open();
 
-                // Kiểm tra trùng tên
                 string checkSql = "SELECT COUNT(*) FROM CATEGORY WHERE Category_Name = @Name";
                 using (SqlCommand checkCmd = new SqlCommand(checkSql, connection))
                 {

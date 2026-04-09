@@ -64,7 +64,6 @@ namespace ASM_Database
 
         private void iconButton1_Click(object sender, EventArgs e)
         {
-
             string username = txtUserName.Text;
             string password = txtPassWord.Text;
             bool isValid = ValidateData(username, password);

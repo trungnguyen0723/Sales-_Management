@@ -20,7 +20,7 @@ namespace ASM_Database
         private int _employeeId;
         private string _authority;
 
-        // Constructor mặc định (không dùng nữa nhưng giữ để tránh lỗi build)
+        
         public Form1()
         {
             InitializeComponent();
@@ -28,7 +28,7 @@ namespace ASM_Database
             random = new Random();
         }
 
-        //  Constructor chính — nhận employeeId và authority
+       
         public Form1(int employeeId, string authority)
         {
             InitializeComponent();
@@ -36,10 +36,10 @@ namespace ASM_Database
             random = new Random();
             _employeeId = employeeId;
             _authority = authority;
-            ApplyRolePermissions();  //  Phân quyền menu
+            ApplyRolePermissions();  
         }
 
-        //  Phân quyền theo Authority
+      
         private void ApplyRolePermissions()
         {
             switch (_authority.ToLower())
@@ -233,7 +233,7 @@ namespace ASM_Database
         private void panel1_Paint(object sender, PaintEventArgs e) { }
         private void panelMenu_Paint(object sender, PaintEventArgs e) { }
 
-        private void btnTransactionHistory_Click(object sender, EventArgs e)
+        private void btnTransactionHistory_Click(object sender, EventArgs se)
         {
             OpenChildForm(new Forms.FormTransactionHistory(), sender);
         }

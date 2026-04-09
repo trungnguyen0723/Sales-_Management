@@ -141,7 +141,6 @@ namespace ASM_Database.Forms
         {
             if (cbbProductID.SelectedItem == null) return;
 
-            // ✅ Sửa: lấy giá trị từ SelectedItem thay vì SelectedValue
             if (cbbProductID.SelectedItem is DataRowView row)
             {
                 int productId = Convert.ToInt32(row["Product_ID"]);
@@ -225,7 +224,6 @@ namespace ASM_Database.Forms
 
             string productName = tbProductName.Text;
 
-            // Kiểm tra tồn kho
             using (SqlConnection connection = DatabaseConnection.GetConnection())
             {
                 if (connection == null) return;
@@ -244,7 +242,7 @@ namespace ASM_Database.Forms
                 }
             }
 
-            //  Cùng sản phẩm → gộp vào 1 dòng, cộng thêm số lượng
+            
             foreach (DataRow orderRow in _orderTable.Rows)
             {
                 if (Convert.ToInt32(orderRow["Product_ID"]) == productId)
@@ -258,7 +256,6 @@ namespace ASM_Database.Forms
                 }
             }
 
-            // Sản phẩm mới → thêm 1 dòng mới riêng
             _orderTable.Rows.Add(productId, productName, quantity, price, quantity * price);
             UpdateTotal();
             ClearInputData();
@@ -291,8 +288,6 @@ namespace ASM_Database.Forms
                 cbbCustomer.DataSource = table;
                 cbbCustomer.DisplayMember = "Customer_Name";
                 cbbCustomer.ValueMember = "Customer_ID";
-
-                // ✅ Autocomplete - gõ tên hoặc ID tự nhảy
                 cbbCustomer.AutoCompleteMode = AutoCompleteMode.SuggestAppend;
                 cbbCustomer.AutoCompleteSource = AutoCompleteSource.ListItems;
             }
@@ -413,7 +408,7 @@ namespace ASM_Database.Forms
                 return;
             }
 
-            // ✅ Lấy thông tin khách hàng
+            //  Lấy thông tin khách hàng
             string customerId = "N/A";
             string customerName = "Guest";
             if (cbbCustomer.SelectedItem is DataRowView customerRow)
@@ -425,8 +420,8 @@ namespace ASM_Database.Forms
             string receipt = "========== RECEIPT ==========\n";
             receipt += $"Date: {DateTime.Now:dd/MM/yyyy HH:mm}\n";
             receipt += "------------------------------\n";
-            receipt += $"Customer ID : {customerId}\n";      // ✅ Thêm
-            receipt += $"Customer    : {customerName}\n";    // ✅ Thêm
+            receipt += $"Customer ID : {customerId}\n";      //  Thêm
+            receipt += $"Customer    : {customerName}\n";    //  Thêm
             receipt += "------------------------------\n";
             foreach (DataRow row in _orderTable.Rows)
             {
@@ -474,18 +469,17 @@ namespace ASM_Database.Forms
             int index = e.RowIndex;
             if (index < 0) return;
 
-            _isLoading = true; //  Chặn trigger SelectedIndexChanged khi set value
+            _isLoading = true; 
 
-            // Lấy thông tin từ row được chọn
+            
             int productId = Convert.ToInt32(dtgProduct.Rows[index].Cells["Product_ID"].Value);
             string productName = dtgProduct.Rows[index].Cells["Product_Name"].Value.ToString();
             string price = dtgProduct.Rows[index].Cells["Selling_Price"].Value.ToString();
 
-            // Điền vào textbox
             tbProductName.Text = productName;
             tbPrice.Text = price;
 
-            // Lấy Category_ID của sản phẩm từ database
+           
             using (SqlConnection connection = DatabaseConnection.GetConnection())
             {
                 if (connection == null) { _isLoading = false; return; }
@@ -497,7 +491,7 @@ namespace ASM_Database.Forms
                     command.Parameters.AddWithValue("@ProductID", productId);
                     int categoryId = Convert.ToInt32(command.ExecuteScalar());
 
-                    // ✅ Set Category ComboBox theo categoryId
+                    
                     foreach (DataRowView rowView in cbbCategory.Items)
                     {
                         if (Convert.ToInt32(rowView["Category_ID"]) == categoryId)
@@ -508,7 +502,7 @@ namespace ASM_Database.Forms
                     }
                 }
 
-                //  Load Product ID theo category vừa chọn
+               
                 string sqlProduct = "SELECT Product_ID, Product_Name FROM PRO_DUCT WHERE Category_ID = (SELECT Category_ID FROM PRO_DUCT WHERE Product_ID = @ProductID) AND Inventory_Quantity > 0";
                 using (SqlCommand command = new SqlCommand(sqlProduct, connection))
                 {
@@ -521,7 +515,6 @@ namespace ASM_Database.Forms
                     cbbProductID.ValueMember = "Product_ID";
                 }
 
-                //  Set Product ID ComboBox theo productId
                 foreach (DataRowView rowView in cbbProductID.Items)
                 {
                     if (Convert.ToInt32(rowView["Product_ID"]) == productId)
